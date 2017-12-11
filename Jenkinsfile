@@ -3,12 +3,12 @@ node {
     // Mark the code checkout 'Checkout'....
     checkout scm
   // Get some code from a GitHub repository
-    git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+    //git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
 
     // Setup the AWS Credentials
     withCredentials([usernamePassword(credentialsId: 'aws-keys', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')])
     // // Get some code from a GitHub repository
-    //git url: 'git@github.com:asvmahesh1/asv.git'
+    git url: 'https://github.com/asvmahesh1/asv.git'
  
     // Get the Terraform tool.
     def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'

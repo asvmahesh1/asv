@@ -1,10 +1,14 @@
 node {
  
     // Mark the code checkout 'Checkout'....
-    stage 'Checkout'
- 
+    checkout scm
+  // Get some code from a GitHub repository
+    git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+
+    // Setup the AWS Credentials
+    withCredentials([usernamePassword(credentialsId: 'aws-keys', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')])
     // // Get some code from a GitHub repository
-    git url: 'git@github.com:asvmahesh1/asv.git'
+    //git url: 'git@github.com:asvmahesh1/asv.git'
  
     // Get the Terraform tool.
     def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
@@ -17,14 +21,14 @@ node {
             sh "terraform --version"
             //Remove the terraform state file so we always start from a clean state
             if (fileExists(".terraform/terraform.tfstate")) {
-                sh "rm -rf .terraform/terraform.tfstate"
+                bat 'rm -rf .terraform/terraform.tfstate'
             }
             if (fileExists("status")) {
-                sh "rm status"
+                bat 'rm status'
             }
-            sh "./init"
-            sh "terraform get"
-            sh "set +e; terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status"
+            bat './init'
+            bat 'terraform get'
+            bat 'set +e; terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status'
             def exitCode = readFile('status').trim()
             def apply = false
             echo "Terraform Plan Exit Code: ${exitCode}"
@@ -52,9 +56,9 @@ node {
                 stage name: 'Apply', concurrency: 1
                 unstash 'plan'
                 if (fileExists("status.apply")) {
-                    sh "rm status.apply"
+                    bat 'rm status.apply'
                 }
-                sh 'set +e; terraform apply plan.out; echo \$? &amp;gt; status.apply'
+                bat 'set +e; terraform apply plan.out; echo \$? &amp;gt; status.apply'
                 def applyExitCode = readFile('status.apply').trim()
                 if (applyExitCode == "0") {
                     slackSend channel: '#ci', color: 'good', message: "Changes Applied ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"    

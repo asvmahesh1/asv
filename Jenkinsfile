@@ -1,7 +1,7 @@
 node {
  
     // Mark the code checkout 'Checkout'....
-    checkout scm
+    stage 'checkout'
   // Get some code from a GitHub repository
     //git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
 

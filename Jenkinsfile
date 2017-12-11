@@ -30,7 +30,7 @@ node {
             }
             bat 'terraform init'
             //bat 'terraform get'
-            bat 'terraform plan -out=plan.out -detailed-exitcode; echo $? > status'
+            bat 'terraform plan  \ -var 'AWS_ACCESS_KEY_ID' \ -var 'AWS_SECRET_ACCESS_KEY' \-out=plan.out -detailed-exitcode; echo \$? > status'
             def exitCode = readFile('status').trim()
             def apply = false
             echo "Terraform Plan Exit Code: ${exitCode}"

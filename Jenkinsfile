@@ -12,14 +12,14 @@ node {
     //git url: 'https://github.com/asvmahesh1/asv.git'
  
     // Get the Terraform tool.
-    def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-    env.PATH = "${tfHome}:${env.PATH}"
-    wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+    //def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
+    //env.PATH = "${tfHome}:${env.PATH}"
+    //wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
  
             // Mark the code build 'plan'....
             stage name: 'Plan', concurrency: 1
             // Output Terraform version
-            sh "terraform --version"
+            bat 'terraform --version'
             //Remove the terraform state file so we always start from a clean state
             if (fileExists(".terraform/terraform.tfstate")) {
                 bat 'rm -rf .terraform/terraform.tfstate'
@@ -68,5 +68,4 @@ node {
                     currentBuild.result = 'FAILURE'
                 }
             }
-    }
-}
+ }

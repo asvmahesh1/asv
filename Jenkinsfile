@@ -1,5 +1,3 @@
-def pullRequest = false
-
 ansiColor('xterm') {
   node {
     // Set github status that the images could be built successfully

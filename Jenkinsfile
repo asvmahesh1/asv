@@ -30,7 +30,7 @@ node {
             }
             bat 'terraform init'
             //bat 'terraform get'
-            bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status'
+            bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? > status'
             def exitCode = readFile('status').trim()
             def apply = false
             echo "Terraform Plan Exit Code: ${exitCode}"

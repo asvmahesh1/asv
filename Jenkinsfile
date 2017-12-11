@@ -23,10 +23,10 @@ node {
             bat 'terraform --version'
             //Remove the terraform state file so we always start from a clean state
             if (fileExists(".terraform/terraform.tfstate")) {
-                bat 'rm -rf .terraform/terraform.tfstate'
+                bat 'del .terraform/terraform.tfstate'
             }
             if (fileExists("status")) {
-                bat 'rm status'
+                bat 'del status'
             }
             bat 'terraform init'
             //bat 'terraform get'

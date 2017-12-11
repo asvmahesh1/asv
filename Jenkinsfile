@@ -2,12 +2,13 @@ node {
  
     // Mark the code checkout 'Checkout'....
 	stage 'checkout'
-    checkout scm
+    //checkout scm
+	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/asvmahesh1/asv.git']]])
   // Get some code from a GitHub repository
     //git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
 
     // Setup the AWS Credentials
-//withCredentials([usernamePassword(credentialsId: 'aws-keys', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')])
+//withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) 
     // // Get some code from a GitHub repository
     //git url: 'https://github.com/asvmahesh1/asv.git'
  
@@ -27,9 +28,9 @@ node {
             if (fileExists("status")) {
                 bat 'rm status'
             }
-            bat './init'
-            bat 'terraform get'
-            bat 'set +e; terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status'
+            bat 'terraform init'
+            //bat 'terraform get'
+            bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status'
             def exitCode = readFile('status').trim()
             def apply = false
             echo "Terraform Plan Exit Code: ${exitCode}"

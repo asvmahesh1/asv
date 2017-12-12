@@ -1,3 +1,5 @@
+#!groovy
+
 node {
  
     // Mark the code checkout 'Checkout'....
@@ -12,6 +14,12 @@ node {
     // // Get some code from a GitHub repository
     //git url: 'https://github.com/asvmahesh1/asv.git'
  
+    //Setup the AWS Credentials
+withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '${env.aws-keys}', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        env.AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
+        env.AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
+		}
+		
     // Get the Terraform tool.
     //def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
     //env.PATH = "${tfHome}:${env.PATH}"
@@ -30,7 +38,8 @@ node {
             }
             bat 'terraform init'
             //bat 'terraform get'
-            bat 'terraform plan   -var 'AWS_ACCESS_KEY_ID'  -var 'AWS_SECRET_ACCESS_KEY' -out=plan.out -detailed-exitcode; echo \$? > status'
+			bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? > status'
+            //bat 'terraform plan   -var 'AWS_ACCESS_KEY_ID'  -var 'AWS_SECRET_ACCESS_KEY' -out=plan.out -detailed-exitcode; echo \$? > status'
             def exitCode = readFile('status').trim()
             def apply = false
             echo "Terraform Plan Exit Code: ${exitCode}"
@@ -69,4 +78,4 @@ node {
                     currentBuild.result = 'FAILURE'
                 }
             }
- }
+ //}

@@ -45,7 +45,7 @@ withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariab
 		 -input=false \
 		 -out=terraform.plan \
 		 -detailed-exitcode; echo "detailed-exitcode: $?" \
-	         echo $? > status
+	         echo $? > status'
 	    
 	//bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? > status'
             //bat 'terraform plan   -var 'AWS_ACCESS_KEY_ID'  -var 'AWS_SECRET_ACCESS_KEY' -out=plan.out -detailed-exitcode; echo \$? > status'

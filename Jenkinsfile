@@ -1,10 +1,11 @@
-#!groovy
+/#!groovy
 
 node {
  
     // Mark the code checkout 'Checkout'....
 	stage 'checkout'
-    //checkout scm
+
+	//checkout scm
 	checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/asvmahesh1/asv.git']]])
   // Get some code from a GitHub repository
     //git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
@@ -13,10 +14,12 @@ node {
 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) 
     // // Get some code from a GitHub repository
     //git url: 'https://github.com/asvmahesh1/asv.git'
- 
+
+
     //Setup the AWS Credentials
 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-        env.AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
+
+	env.AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
         env.AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
 		}
 		
@@ -38,7 +41,13 @@ withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariab
             }
             bat 'terraform init'
             //bat 'terraform get'
-			bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? > status'
+	    bat 'terraform plan \
+		 -input=false \
+		 -out=terraform.plan \
+		 -detailed-exitcode; echo "detailed-exitcode: $?" \
+	         echo $? > status
+	    
+	//bat 'terraform plan -out=plan.out -detailed-exitcode; echo \$? > status'
             //bat 'terraform plan   -var 'AWS_ACCESS_KEY_ID'  -var 'AWS_SECRET_ACCESS_KEY' -out=plan.out -detailed-exitcode; echo \$? > status'
             def exitCode = readFile('status').trim()
             def apply = false

@@ -15,7 +15,7 @@ node {
     //git url: 'https://github.com/asvmahesh1/asv.git'
  
     //Setup the AWS Credentials
-withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '${env.aws-keys}', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
         env.AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
         env.AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
 		}

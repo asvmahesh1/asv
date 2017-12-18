@@ -1,3 +1,11 @@
+import jenkins.model.*
+import com.cloudbees.plugins.credentials.*
+import com.cloudbees.plugins.credentials.impl.*
+import com.cloudbees.plugins.credentials.domains.*
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey
+import com.cloudbees.jenkins.plugins.awscredentials.AWSCredentialsImpl
+import org.jenkinsci.plugins.plaincredentials.StringCredentials
+
 #!groovy
 
 node {
@@ -13,13 +21,14 @@ node {
 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) 
     // // Get some code from a GitHub repository
     //git url: 'https://github.com/asvmahesh1/asv.git'
+	
 
 
     //Setup the AWS Credentials
 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
 	AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
         AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
-		}
+		
 		
     
  
@@ -68,7 +77,7 @@ withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariab
                 if (fileExists("status.apply")) {
                     bat 'del status.apply'
                 }
-                bat 'terraform apply plan.out; echo \$? &amp;gt; status.apply'
+                bat 'terraform apply plan.out; echo $? > status.apply'
                 def applyExitCode = readFile('status.apply').trim()
                 if (applyExitCode == "0") {
                     
@@ -77,4 +86,5 @@ withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariab
                     currentBuild.result = 'FAILURE'
                 }
             }
+	}
  }

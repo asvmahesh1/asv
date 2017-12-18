@@ -1,4 +1,4 @@
- #!groovy
+#!groovy
 
 node {
  
@@ -18,8 +18,8 @@ node {
 
     //Setup the AWS Credentials
 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-keys', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-	env.AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
-        env.AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
+	AWS_ACCESS_KEY = "$AWS_ACCESS_KEY_ID"
+        AWS_SECRET_KEY = "$AWS_SECRET_ACCESS_KEY"
 		}
 		
     // Get the Terraform tool.
